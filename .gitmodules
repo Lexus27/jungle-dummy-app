@@ -1,0 +1,3 @@
+[submodule "core/Jungle"]
+	path = core/Jungle
+	url = https://github.com/Lexus27/Jungle.git
