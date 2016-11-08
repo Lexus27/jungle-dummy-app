@@ -10,7 +10,7 @@ tests build demo application
     * Folder organization of the core
         * App - my application folder
         * Jungle - git submodule Jungle.git
-2. We are use `$ cd core && git clone https://github.com/Lexus27/Jungle.git Jungle`
+2. We are use `$ cd core && git submodule add https://github.com/Lexus27/Jungle.git Jungle`
 3. We inherit the base `Jungle\Application` classes for mca-organizing system 
     * And place them in the root of our application with namespace `App/Modules/...` `App/Model/...`
     * We define our logic for basic services in method `App\Application::registerServices(DiInterface $di)`
