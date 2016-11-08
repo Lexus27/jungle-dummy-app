@@ -237,7 +237,7 @@ namespace App {
 								'[object.mca] = #index:index:not_found',
 								'[object.mca] = #index:index:error',
 								'[object.mca] = #index:index:denied',
-								//'[object.mca] = #index:index:index',
+								'[object.mca] = #index:index:index',
 							]
 						]
 					]]
