@@ -21,7 +21,6 @@ namespace App {
 	use Jungle\Application\ViewInterface;
 	use Jungle\Di\DiInterface;
 	use Jungle\Di\DiSettingInterface;
-	use Jungle\Di\Injectable;
 	use Jungle\EventManager\EventManager;
 	use Jungle\Loader;
 	use Jungle\User\AccessControl\Manager;

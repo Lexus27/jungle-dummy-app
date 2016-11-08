@@ -11,7 +11,6 @@ namespace App\Modules\Index\Controller {
 	
 	use Jungle\Application\Dispatcher\Controller;
 	use Jungle\Application\Dispatcher\Process;
-	use Jungle\Application\Dispatcher\ProcessInterface;
 	use Jungle\Util\Communication\HttpFoundation\ResponseInterface;
 
 	/**
