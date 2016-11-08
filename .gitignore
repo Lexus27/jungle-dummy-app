@@ -1,2 +1,5 @@
 # Created by .ignore support plugin (hsz.mobi)
-/.idea/*
+
+.idea
+core/App/_cache/
+core/App/_log/
