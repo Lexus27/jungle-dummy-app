@@ -1,6 +1,7 @@
 <?php
 namespace App\Modules;
 use Jungle\Application\Dispatcher\Module\StaticModule;
+use Jungle\Application\Dispatcher\ProcessInterface;
 
 /**
  * Created by Kutuzov Alexey Konstantinovich <lexus.1995@mail.ru>.
@@ -11,6 +12,13 @@ use Jungle\Application\Dispatcher\Module\StaticModule;
  * Time: 13:04
  */
 class Index extends StaticModule{
+
+
+	protected function interceptedException(\Exception $e, ProcessInterface $process){
+		if($process->getTask('access')){
+			$process->forward('#index:index:denied');
+		}
+	}
 
 }
 
