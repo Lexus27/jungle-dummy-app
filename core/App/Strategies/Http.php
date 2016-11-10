@@ -9,18 +9,12 @@
  */
 namespace App\Strategies {
 
+	use Jungle\Util\Communication\HttpFoundation\RequestInterface;
 	use Jungle\Application\Strategy\Http\CookieManager;
 	use Jungle\Application\Strategy\Http\Router;
 	use Jungle\Application\View\ViewStrategy;
 	use Jungle\Di\DiInterface;
 	use Jungle\User\Account;
-	use Jungle\User\Session\Provider\Session;
-	use Jungle\User\Session\Provider\Token;
-	use Jungle\User\Session\SignatureInspector\Cookies;
-	use Jungle\User\Session\SignatureInspector\TokenInspector;
-	use Jungle\User\SessionManager;
-	use Jungle\Util\Communication\HttpFoundation\RequestInterface;
-	use Services\Session\MyModels;
 
 	/**
 	 * Class Http
@@ -60,10 +54,9 @@ namespace App\Strategies {
 						return $p;
 					}
 				]);
+				$router->notFound('#index:index:not_found');
 				return $router;
 			});
-
-
 
 			$this->set('view_strategy', function(){
 				$vs = new ViewStrategy();
@@ -75,34 +68,50 @@ namespace App\Strategies {
 
 			$this->setShared('session',function(DiInterface $di){
 
-				$manager = new SessionManager();
+				$manager = new \Jungle\User\SessionManager();
 				$manager->setDi($di);
-				$manager->setStorage(new MyModels());
+				$manager->setStorage(new \App\Services\Session\MyModels());
 
-				$cookieSession = new Session();
-				$cookieSession->setDi($di);
-				$cookieSession->setSignatureInspector( (new Cookies())->setCookieName('JUNGLE_SESS') );
+				// our session manager
+				$mySessionProvider = new \Jungle\User\Session\Provider\Session();
+				$mySessionProvider->setDi($di);
 
-				$tokenInspector = new TokenInspector('accessBy','setAccessToken','setAccessExpires');
-				$token = new Token();
-				$token->setDi($di);
-				$token->setSignatureInspector($tokenInspector);
+				// inspect session signature from request by Cookies
+				$cookieInspector = new \Jungle\User\Session\SignatureInspector\Cookies();
+				$cookieInspector->setCookieName('JUNGLE_SESS');
+				$mySessionProvider->setSignatureInspector($cookieInspector);
+
+				// other API Token specify intercepting
+				$myTokenSessProvider = new \Jungle\User\Session\Provider\Token();
+				$myTokenSessProvider->setDi($di);
+				// inspect token signature from request by special token inspector (inspect by get/post/json-object params automatically)
+				$tokenInspector = new \Jungle\User\Session\SignatureInspector\TokenInspector(
+					'accessBy','setAccessToken','setAccessExpires'
+				);
+				$myTokenSessProvider->setSignatureInspector($tokenInspector);
 
 
-				$manager->setDefaultProvider($cookieSession);
+				// mount to manager with default
+				$manager->setDefaultProvider($mySessionProvider);
 				$manager->setProviders([
-					$cookieSession,
-					$token,
+					$mySessionProvider,
+					$myTokenSessProvider,
 				]);
 
-
+				// set sessions lifetime, if NULL - will be removed after close client browsing session
 				$manager->setLifetime(86000 * 2);
 
 				return $manager;
 			});
 
+			/**
+			 * Cookie Manager from request
+			 */
 			$this->setShared('cookie', new CookieManager());
 
+			/**
+			 * Account read the session for recognize logged User identifiers
+			 */
 			$this->setShared('account', new Account());
 
 

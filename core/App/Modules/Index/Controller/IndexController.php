@@ -69,6 +69,23 @@ namespace App\Modules\Index\Controller {
 			}
 		}
 
+		/**
+		 * @return array
+		 */
+		public function not_foundMetadata(){
+			return [
+				'hierarchy' => true,
+				'private' => true
+			];
+		}
+
+		/**
+		 * @param Process $process
+		 */
+		public function not_foundAction(Process $process){
+			$this->response->setCode(404);
+		}
+
 
 	}
 }

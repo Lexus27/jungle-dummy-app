@@ -7,7 +7,7 @@
  * Date: 08.11.2016
  * Time: 14:43
  */
-namespace Services\Session {
+namespace App\Services\Session {
 	
 	use App\Model\Session;
 	use Jungle\User\Session\Storage\Models as SessionStorageModels;
